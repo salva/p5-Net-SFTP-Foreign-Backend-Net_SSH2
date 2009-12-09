@@ -1,0 +1,6 @@
+Revision history for Perl extension Net::SFTP::Foreign::Backend::Net_SSH2.
+
+0.01  Wed Dec  9 18:45:55 2009
+	- original version; created by h2xs 1.23 with options
+		-AXn Net::SFTP::Foreign::Backend::Net_SSH2
+
