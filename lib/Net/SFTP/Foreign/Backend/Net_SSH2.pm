@@ -28,10 +28,18 @@ sub _defaults {
 }
 
 sub _conn_failed {
-    my ($self, $sftp, $ssh2, $msg) = @_;
+    my ($self, $sftp, $msg) = @_;
     $sftp->_conn_failed(sprintf("%s: %s (%d): %s",
 				$msg,
-				($ssh2->error)[1, 0, 2]));
+				($self->{_ssh2}->error)[1, 0, 2]));
+}
+
+sub _conn_lost {
+    my ($self, $sftp, $msg) = @_;
+    $sftp->_conn_lost(undef, undef,
+                      sprintf("%s: %s (%d): %s",
+                              $msg,
+                              ($self->{_ssh2}->error)[1, 0, 2]));
 }
 
 my %auth_arg_map = qw(host hostname
@@ -60,21 +68,20 @@ sub _init_transport {
 	my $port = delete $opts->{port} || 22;
 	%$opts and return;
 
-	$ssh2 = Net::SSH2->new();
+	$ssh2 = $self->{_ssh2} = Net::SSH2->new();
 	unless ($ssh2->connect($host, $port)) {
-	    $self->_conn_failed($sftp, $ssh2,
-				"connection to remote host $host failed");
+	    $self->_conn_failed($sftp, "connection to remote host $host failed");
 	    return;
 	}
 
 	unless ($ssh2->auth(%auth_args)) {
-	    $self->_conn_failed($sftp, $ssh2, "authentication failed");
+	    $self->_conn_failed($sftp, "authentication failed");
 	    return;
 	}
     }
     my $channel = $self->{_channel} = $ssh2->channel;
     unless (defined $channel) {
-	$self->_conn_failed("unable to create new session channel");
+	$self->_conn_failed($sftp, "unable to create new session channel");
 	return;
     }
     $channel->ext_data('ignore');
@@ -92,7 +99,7 @@ sub _sysreadn {
 	my $buf = '';
 	my $read = $channel->read($buf, $n - $len);
 	unless (defined $read) {
-	    $self->_conn_lost($sftp, $self->{_ssh2}, "read failed");
+	    $self->_conn_lost($sftp, "read failed");
 	    return undef;
 	}
 	$$bin .= $buf;
@@ -112,7 +119,7 @@ sub _do_io {
 	my $buf = substr($$bout, 0, 20480);
 	my $written = $channel->write($buf);
 	unless ($written) {
-	    $self->_conn_lost($sftp, $self->{_ssh2}, "write failed");
+	    $self->_conn_lost($sftp, "write failed");
 	    return undef;
 	}
 	substr($$bout, 0, $written, "");

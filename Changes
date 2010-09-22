@@ -1,5 +1,9 @@
 Revision history for Perl extension Net::SFTP::Foreign::Backend::Net_SSH2.
 
+0.02  Sep 22, 2010
+        - _conn_lost was used but not implemented (bug report by
+          Philippe Vouters)
+
 0.01  Wed Dec  9 18:45:55 2009
 	- original version; created by h2xs 1.23 with options
 		-AXn Net::SFTP::Foreign::Backend::Net_SSH2
