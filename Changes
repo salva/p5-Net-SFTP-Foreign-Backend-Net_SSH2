@@ -1,5 +1,9 @@
 Revision history for Perl extension Net::SFTP::Foreign::Backend::Net_SSH2.
 
+0.03  Nov 2, 2010
+      - backend was not pipelining requests when called from put
+        method
+
 0.02  Sep 22, 2010
         - _conn_lost was used but not implemented (bug report by
           Philippe Vouters)

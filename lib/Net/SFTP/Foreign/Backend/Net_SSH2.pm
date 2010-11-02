@@ -1,6 +1,6 @@
 package Net::SFTP::Foreign::Backend::Net_SSH2;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use strict;
 use warnings;
@@ -124,6 +124,8 @@ sub _do_io {
 	}
 	substr($$bout, 0, $written, "");
     }
+
+    defined $timeout and $timeout <= 0 and return;
 
     $self->_sysreadn($sftp, 4) or return undef;
 
