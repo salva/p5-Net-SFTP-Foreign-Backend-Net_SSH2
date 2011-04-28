@@ -102,6 +102,7 @@ sub _sysreadn {
 	    $self->_conn_lost($sftp, "read failed");
 	    return undef;
 	}
+        $debug and $debug & 32 and _debug "$read bytes read from SSH channel";
 	$$bin .= $buf;
     }
     return $n;
@@ -122,6 +123,7 @@ sub _do_io {
 	    $self->_conn_lost($sftp, "write failed");
 	    return undef;
 	}
+        $debug and $debug & 32 and _debug("$written bytes written to SSH channel");
 	substr($$bout, 0, $written, "");
     }
 
