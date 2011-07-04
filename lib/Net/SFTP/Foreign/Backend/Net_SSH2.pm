@@ -44,7 +44,8 @@ sub _conn_lost {
 
 my %auth_arg_map = qw(host hostname
 		      user username
-		      local_user local_username);
+		      local_user local_username
+                      key_path privatekey);
 
 sub _init_transport {
     my ($self, $sftp, $opts) = @_;
@@ -60,6 +61,7 @@ sub _init_transport {
 	for (qw(rank username password publickey privatekey hostname
 		local_username interact cb_keyboard cb_password user host)) {
 	    my $map = $auth_arg_map{$_} || $_;
+            next if defined $auth_args{$map};
 	    $auth_args{$map} = delete $opts->{$_} if exists $opts->{$_}
 	}
 

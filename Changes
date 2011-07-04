@@ -1,5 +1,8 @@
 Revision history for Perl extension Net::SFTP::Foreign::Backend::Net_SSH2.
 
+0.04
+      - accept key_path as an alias for privatekey
+
 0.03  Nov 2, 2010
       - backend was not pipelining requests when called from put
         method
