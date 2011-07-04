@@ -65,7 +65,7 @@ sub _init_transport {
 	    $auth_args{$map} = delete $opts->{$_} if exists $opts->{$_}
 	}
 
-        if (defined $auth_args{privatekey} and not defined $auth_args{publickeys}) {
+        if (defined $auth_args{privatekey} and not defined $auth_args{publickey}) {
             $auth_args{publickey} = "$auth_args{privatekey}.pub";
         }
 
