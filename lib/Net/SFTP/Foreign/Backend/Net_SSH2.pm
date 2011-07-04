@@ -65,6 +65,10 @@ sub _init_transport {
 	    $auth_args{$map} = delete $opts->{$_} if exists $opts->{$_}
 	}
 
+        if (defined $auth_args{privatekey} and not defined $auth_args{publickeys}) {
+            $auth_args{publickey} = "$auth_args{privatekey}.pub";
+        }
+
 	my $host = $auth_args{hostname};
 	defined $host or croak "sftp target host not defined";
 	my $port = delete $opts->{port} || 22;

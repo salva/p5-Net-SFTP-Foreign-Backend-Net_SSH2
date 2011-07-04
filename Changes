@@ -1,6 +1,7 @@
 Revision history for Perl extension Net::SFTP::Foreign::Backend::Net_SSH2.
 
 0.04
+      - infer publickey from privatekey
       - accept key_path as an alias for privatekey
 
 0.03  Nov 2, 2010
