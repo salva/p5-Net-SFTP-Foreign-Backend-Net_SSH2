@@ -1,6 +1,6 @@
 package Net::SFTP::Foreign::Backend::Net_SSH2;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use strict;
 use warnings;
@@ -147,6 +147,8 @@ sub _do_io {
     $self->_sysreadn($sftp, $len);
 }
 
+sub _after_init {};
+
 1;
 
 __END__
@@ -246,7 +248,7 @@ is rather limited and its performance very poor.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2009-2010 by Salvador FandiE<ntilde>o (sfandino@yahoo.com).
+Copyright (c) 2009-2011 by Salvador FandiE<ntilde>o (sfandino@yahoo.com).
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
