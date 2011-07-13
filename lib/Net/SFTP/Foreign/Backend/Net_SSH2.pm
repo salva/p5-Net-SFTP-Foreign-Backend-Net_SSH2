@@ -24,7 +24,7 @@ sub _new {
 }
 
 sub _defaults {
-    ( default_queue_size => 4 )
+    ( default_queue_size => 32 )
 }
 
 sub _conn_failed {
