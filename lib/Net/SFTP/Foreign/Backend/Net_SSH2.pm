@@ -1,6 +1,6 @@
 package Net::SFTP::Foreign::Backend::Net_SSH2;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use strict;
 use warnings;
@@ -59,7 +59,8 @@ sub _init_transport {
     else {
 	my %auth_args;
 	for (qw(rank username password publickey privatekey hostname
-		local_username interact cb_keyboard cb_password user host)) {
+		key_path local_user local_username interact
+		cb_keyboard cb_password user host)) {
 	    my $map = $auth_arg_map{$_} || $_;
             next if defined $auth_args{$map};
 	    $auth_args{$map} = delete $opts->{$_} if exists $opts->{$_}
@@ -73,6 +74,12 @@ sub _init_transport {
 	defined $host or croak "sftp target host not defined";
 	my $port = delete $opts->{port} || 22;
 	%$opts and return;
+
+        unless (defined $auth_args{username}) {
+            local $SIG{__DIE__};
+            $auth_args{username} = eval { scalar getpwuid $< };
+            defined $auth_args{username} or croak "required option 'user' missing";
+        }
 
 	$ssh2 = $self->{_ssh2} = Net::SSH2->new();
 	unless ($ssh2->connect($host, $port)) {
