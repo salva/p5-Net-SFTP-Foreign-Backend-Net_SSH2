@@ -1,9 +1,10 @@
 package Net::SFTP::Foreign::Backend::Net_SSH2;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use strict;
 use warnings;
+use Time::HiRes qw(sleep);
 
 use Carp;
 our @CARP_NOT = qw(Net::SFTP::Foreign);
@@ -112,6 +113,11 @@ sub _sysreadn {
 	my $buf = '';
 	my $read = $channel->read($buf, $n - $len);
 	unless (defined $read) {
+            $debug and $debug & 32 and _debug "read error: EAGAIN, delaying before retrying";
+            if ($self->{_ssh2}->error == Net::SSH2::LIBSSH2_ERROR_EAGAIN()) {
+                sleep 0.01;
+                redo;
+            }
 	    $self->_conn_lost($sftp, "read failed");
 	    return undef;
 	}
@@ -133,6 +139,11 @@ sub _do_io {
 	my $buf = substr($$bout, 0, 20480);
 	my $written = $channel->write($buf);
 	unless ($written) {
+            if ($self->{_ssh2}->error == Net::SSH2::LIBSSH2_ERROR_EAGAIN()) {
+                $debug and $debug & 32 and _debug "write error: EAGAIN, delaying before retrying";
+                sleep 0.01;
+                redo;
+            }
 	    $self->_conn_lost($sftp, "write failed");
 	    return undef;
 	}

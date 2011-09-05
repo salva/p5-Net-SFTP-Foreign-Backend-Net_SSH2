@@ -1,5 +1,8 @@
 Revision history for Perl extension Net::SFTP::Foreign::Backend::Net_SSH2.
 
+0.06  Sep 5, 2011
+      - workaround for EAGAIN errors in blocking session
+
 0.05  Jul 13, 2011
       - key_path handling was broken
       - use process user as login user when available
