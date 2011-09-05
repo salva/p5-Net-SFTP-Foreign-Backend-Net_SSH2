@@ -187,6 +187,8 @@ Net::SFTP::Foreign::Backend::Net_SSH2 - Run Net::SFTP::Foreign on top of Net::SS
     die "Unable to stablish SFTP connection: ". $sftp->error;
 
 
+  # or...
+
   use Net::SSH2;
 
   my $ssh2 = Net::SSH2->new();
