@@ -1,5 +1,9 @@
 Revision history for Perl extension Net::SFTP::Foreign::Backend::Net_SSH2.
 
+0.08  
+      - queue_size default was using the wrong key name and so being
+        ignored
+
 0.07  Feb 19, 2011
       - better debugging
 

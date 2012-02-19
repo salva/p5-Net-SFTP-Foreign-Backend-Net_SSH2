@@ -1,6 +1,6 @@
 package Net::SFTP::Foreign::Backend::Net_SSH2;
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 use strict;
 use warnings;
@@ -25,7 +25,7 @@ sub _new {
 }
 
 sub _defaults {
-    ( default_queue_size => 32 )
+    ( queue_size => 32 )
 }
 
 sub _conn_failed {
