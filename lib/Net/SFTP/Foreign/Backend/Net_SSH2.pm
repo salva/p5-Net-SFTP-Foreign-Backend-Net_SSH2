@@ -280,7 +280,7 @@ is rather limited and its performance very poor.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2009-2011 by Salvador FandiE<ntilde>o (sfandino@yahoo.com).
+Copyright (c) 2009-2012 by Salvador FandiE<ntilde>o (sfandino@yahoo.com).
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
