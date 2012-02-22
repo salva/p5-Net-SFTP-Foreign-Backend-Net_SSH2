@@ -12,14 +12,22 @@ our @CARP_NOT = qw(Net::SFTP::Foreign);
 use Net::SFTP::Foreign::Helpers;
 use Net::SFTP::Foreign::Constants qw(SSH2_FX_BAD_MESSAGE
 				     SFTP_ERR_REMOTE_BAD_MESSAGE);
+use Net::SSH2;
+
+my $eagain_error = do {
+    local ($@, $SIG{__DIE__}, $SIG{__WARN__});
+    eval { Net::SSH2::LIBSSH2_ERROR_EAGAIN() };
+};
+unless (defined $eagain_error) {
+    $eagain_error = -1;
+    $debug and $debug & 131072 and _debug "The installed version of Net::SSH2 does not support LIBSSH2_ERROR_EGAIN";
+}
 
 sub _new {
+    $debug and
+        _debug "Using Net_SSH2 backend, Net::SSH2 version $Net::SSH2::VERSION compiled against libssh2 "
+            . Net::SSH2->version;
     my $class = shift;
-
-    eval { require Net::SSH2; 1}
-	or croak "Module Net::SSH2 required by ".
-	    "Net::SFTP::Foreign::Backend::Net_SSH2 can not be loaded";
-
     my $self = {};
     bless $self, $class;
 }
@@ -117,7 +125,8 @@ sub _sysreadn {
 	my $buf = '';
 	my $read = $channel->read($buf, $n - $len);
 	unless (defined $read) {
-            if ($self->{_ssh2}->error == Net::SSH2::LIBSSH2_ERROR_EAGAIN()) {
+            $debug and $debug & 32 and _debug("read failed: " . $self->{_ssh2}->error . ", n: $n, len: $len");
+            if ($self->{_ssh2}->error == $eagain_error) {
                 $debug and $debug & 32 and _debug "read error: EAGAIN, delaying before retrying";
                 sleep 0.01;
                 redo;
