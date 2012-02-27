@@ -115,12 +115,18 @@ sub _init_transport {
     $channel->subsystem('sftp');
 }
 
+#my $d;
 sub _sysreadn {
     my ($self, $sftp, $n) = @_;
     my $channel = $self->{_channel};
     my $bin = \$sftp->{_bin};
     while (1) {
 	my $len = length $$bin;
+        $debug and $debug & 32 and _debug "reading at $len/$n";
+        #if ($sftp->{_read_total} > 255 * 1024 and !$d) {
+        #    $self->{_ssh2}->debug(1);
+        #    $d++;
+        #}
 	return 1 if $len >= $n;
 	my $buf = '';
 	my $read = $channel->read($buf, $n - $len);
@@ -144,6 +150,9 @@ sub _sysreadn {
     return $n;
 }
 
+open my $dump, ">", "/tmp/dump";
+binmode $dump;
+
 sub _do_io {
     my ($self, $sftp, $timeout) = @_;
     my $channel = $self->{_channel};
@@ -155,6 +164,7 @@ sub _do_io {
     while (length $$bout) {
 	my $buf = substr($$bout, 0, 20480);
 	my $written = $channel->write($buf);
+        syswrite $dump, 'w' . pack(N => length $buf) . $buf;
 	unless ($written) {
             if ($self->{_ssh2}->error == Net::SSH2::LIBSSH2_ERROR_EAGAIN()) {
                 $debug and $debug & 32 and _debug "write error: EAGAIN, delaying before retrying";
@@ -173,7 +183,7 @@ sub _do_io {
     }
 
     defined $timeout and $timeout <= 0 and return;
-
+    syswrite $dump, 'r';
     $self->_sysreadn($sftp, 4) or return undef;
 
     my $len = 4 + unpack N => $$bin;
