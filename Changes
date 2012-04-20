@@ -1,6 +1,7 @@
 Revision history for Perl extension Net::SFTP::Foreign::Backend::Net_SSH2.
 
-0.08  
+0.08  Apr 16, 2012
+      - explicitly closes SFTP channel on DESTROY
       - load Net::SSH2 when module is loaded, not from new
       - not all versions of Net::SSH2 support LIBSSH2_ERROR_EAGAIN
       - queue_size default was using the wrong key name and so being

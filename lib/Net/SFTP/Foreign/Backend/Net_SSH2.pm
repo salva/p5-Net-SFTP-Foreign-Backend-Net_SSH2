@@ -188,6 +188,15 @@ sub _do_io {
 
 sub _after_init {};
 
+sub DESTROY {
+    my $self = shift;
+    local ($@, $!, $?, $SIG{__DIE__});
+    eval {
+        $self->{_channel}->close;
+        undef $self->{_channel};
+   };
+}
+
 1;
 
 __END__
