@@ -1,5 +1,8 @@
 Revision history for Perl extension Net::SFTP::Foreign::Backend::Net_SSH2.
 
+0.09  Apr 28, 2012
+      - support authentication keys protected by passphrase
+
 0.08  Apr 16, 2012
       - explicitly closes SFTP channel on DESTROY
       - load Net::SSH2 when module is loaded, not from new

@@ -1,6 +1,6 @@
 package Net::SFTP::Foreign::Backend::Net_SSH2;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 use strict;
 use warnings;
@@ -53,6 +53,7 @@ sub _conn_lost {
 
 my %auth_arg_map = qw(host hostname
 		      user username
+                      passphrase password
 		      local_user local_username
                       key_path privatekey);
 
@@ -68,8 +69,8 @@ sub _init_transport {
     }
     else {
 	my %auth_args;
-	for (qw(rank username password publickey privatekey hostname
-		key_path local_user local_username interact
+	for (qw(rank username passphrase password publickey privatekey
+		hostname key_path local_user local_username interact
 		cb_keyboard cb_password user host)) {
 	    my $map = $auth_arg_map{$_} || $_;
             next if defined $auth_args{$map};
