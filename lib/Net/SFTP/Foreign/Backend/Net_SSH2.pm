@@ -265,9 +265,13 @@ authenticated.
 
 =item password => $password
 
-=item publickey => $publickey
+=item publickey => $publickey_path
 
-=item privatekey => $privatekey
+=item key_path => $privatekey_path
+
+=item privatekey => $privatekey_path
+
+=item passphrase => $passphrase
 
 =item local_username => $local_username
 
@@ -275,7 +279,7 @@ authenticated.
 
 =item cb_keyboard => $cb_keyboard
 
-=item cv_password => $cb_password
+=item cb_password => $cb_password
 
 These options are passed to L<Net::SSH2> C<connect> and C<auth>
 methods in order to stablish an SSH authenticated connection with the
