@@ -61,6 +61,7 @@ sub _init_transport {
     my ($self, $sftp, $opts) = @_;
     my $ssh2 = delete $opts->{ssh2};
     if (defined $ssh2) {
+        $self->{_ssh2} = $ssh2;
         $debug and $debug & 131072 and $ssh2->debug(1);
 	unless ($ssh2->auth_ok) {
 	    $sftp->_conn_failed("Net::SSH2 object is not authenticated");
@@ -112,7 +113,6 @@ sub _init_transport {
 	return;
     }
     $channel->ext_data('ignore');
-    $self->{_ssh2} = $ssh2;
     $channel->subsystem('sftp');
 }
 
