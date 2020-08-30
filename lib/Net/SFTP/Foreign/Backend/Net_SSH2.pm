@@ -1,6 +1,6 @@
 package Net::SFTP::Foreign::Backend::Net_SSH2;
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 use strict;
 use warnings;
